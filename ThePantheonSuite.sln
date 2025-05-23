@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePantheonSuite.ArtemisUI", "ThePantheonSuite.ArtemisUI\ThePantheonSuite.ArtemisUI.csproj", "{4F008F04-89CB-48B2-AD79-E413CC64C3EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePantheonSuite.ZeusOrchestrator", "ThePantheonSuite.ZeusOrchestrator\ThePantheonSuite.ZeusOrchestrator.csproj", "{4A8F9A9B-8491-4CEC-9FA0-F911EF9E34B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePantheonSuite.AthenaCore", "ThePantheonSuite.AthenaCore\ThePantheonSuite.AthenaCore.csproj", "{9E7B1FB1-3CD7-4B37-A981-738742F1C12F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePantheonSuite.MinervaServices", "ThePantheonSuite.MinervaServices\ThePantheonSuite.MinervaServices.csproj", "{83970E71-32C0-4D2F-8B97-F8B1740915EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePantheonSuite.MercuryAPI", "ThePantheonSuite.MercuryAPI\ThePantheonSuite.MercuryAPI.csproj", "{4975CB39-0513-4968-9109-DA821CD91D72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePantheonSuite.GaiaDataStore", "ThePantheonSuite.GaiaDataStore\ThePantheonSuite.GaiaDataStore.csproj", "{BD9F73BD-A9F9-41DC-990A-D5ABB60E806D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4F008F04-89CB-48B2-AD79-E413CC64C3EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F008F04-89CB-48B2-AD79-E413CC64C3EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F008F04-89CB-48B2-AD79-E413CC64C3EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F008F04-89CB-48B2-AD79-E413CC64C3EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A8F9A9B-8491-4CEC-9FA0-F911EF9E34B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A8F9A9B-8491-4CEC-9FA0-F911EF9E34B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A8F9A9B-8491-4CEC-9FA0-F911EF9E34B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A8F9A9B-8491-4CEC-9FA0-F911EF9E34B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E7B1FB1-3CD7-4B37-A981-738742F1C12F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E7B1FB1-3CD7-4B37-A981-738742F1C12F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E7B1FB1-3CD7-4B37-A981-738742F1C12F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E7B1FB1-3CD7-4B37-A981-738742F1C12F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83970E71-32C0-4D2F-8B97-F8B1740915EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83970E71-32C0-4D2F-8B97-F8B1740915EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83970E71-32C0-4D2F-8B97-F8B1740915EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83970E71-32C0-4D2F-8B97-F8B1740915EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4975CB39-0513-4968-9109-DA821CD91D72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4975CB39-0513-4968-9109-DA821CD91D72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4975CB39-0513-4968-9109-DA821CD91D72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4975CB39-0513-4968-9109-DA821CD91D72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD9F73BD-A9F9-41DC-990A-D5ABB60E806D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD9F73BD-A9F9-41DC-990A-D5ABB60E806D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD9F73BD-A9F9-41DC-990A-D5ABB60E806D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD9F73BD-A9F9-41DC-990A-D5ABB60E806D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

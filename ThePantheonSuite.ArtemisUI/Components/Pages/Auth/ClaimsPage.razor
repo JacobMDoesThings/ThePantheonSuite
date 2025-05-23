@@ -1,0 +1,29 @@
+@page "/claims"
+@using ThePantheonSuite.ArtemisUI.Configuration.MSALClient
+<h3>ClaimsPage</h3>
+@{
+    foreach (var item in IdTokenClaims)
+    {
+        @item
+    }
+}
+@code {
+    public IEnumerable<string> IdTokenClaims { get; set; } = new string[] {"No claims found in ID token"};
+    
+    protected override Task OnInitializedAsync()
+    {
+        InvokeAsync(async ()=>await PublicClientSingleton.Instance.AcquireTokenSilentAsync());
+       
+        return base.OnInitializedAsync();
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return base.OnAfterRenderAsync(firstRender);
+        IdTokenClaims = PublicClientSingleton.Instance.MSALClientHelper.AuthResult.ClaimsPrincipal.Claims.Select(c => c.Value);
+        InvokeAsync(StateHasChanged);
+
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+}

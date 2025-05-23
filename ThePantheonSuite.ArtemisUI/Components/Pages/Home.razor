@@ -1,0 +1,86 @@
+﻿@page "/"
+@using Azure.Core
+@using Azure.Storage.Blobs
+@using ThePantheonSuite.ArtemisUI.Configuration.MSALClient
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+<button @onclick="GoTo">LoginPage</button>
+<button @onclick="LogOut">Logout</button>
+
+
+<h3>Blob Test</h3>
+
+@if (blobNames != null)
+{
+    <ul>
+        @foreach (var name in blobNames)
+        {
+            <li>@name</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Loading...</p>
+}
+@code{
+    [Inject] NavigationManager? NavigationManager { get; set; } = null;
+    static AccessToken accessToken;
+    private void GoTo()
+    {
+        try
+        {
+           NavigationManager?.NavigateTo("/LoginPage");
+           
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+
+    private async Task LogOut()
+    {
+        await PublicClientSingleton.Instance.MSALClientHelper.SignOutUserAsync();
+    }
+    private List<string> blobNames;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await PublicClientSingleton.Instance.AcquireTokenSilentAsync();
+        var scopes = new[] { "https://storage.azure.com/.default" };
+        //var result = await pca.AcquireTokenSilent(scopes, pca.GetAccountsAsync().Result.FirstOrDefault()).ExecuteAsync();
+
+        accessToken = new AccessToken(token, DateTime.Now.AddMinutes(10));
+        TokenCredential credential = DelegatedTokenCredential.Create(getTokenDelegate);
+        blobNames = await ReadBlobDirectory(credential);
+    }
+    
+    Func<TokenRequestContext, CancellationToken, AccessToken> getTokenDelegate = 
+        (context, cancellationToken) => accessToken;
+ 
+
+    private async Task<List<string>> ReadBlobDirectory(TokenCredential accessToken)
+    {
+        //var credential = new AzureTokenCredential(accessToken);
+
+        // Replace with your storage account URL
+        var blobServiceClient = new BlobServiceClient(
+            new Uri("https://devimgstorwestus01.blob.core.windows.net"),
+            accessToken);
+
+        var containerClient = blobServiceClient.GetBlobContainerClient("testcreate");
+
+        List<string> names = new();
+
+        await foreach (var blobItem in containerClient.GetBlobsAsync())
+        {
+            names.Add(blobItem.Name);
+        }
+
+        return names;
+    }
+
+}
