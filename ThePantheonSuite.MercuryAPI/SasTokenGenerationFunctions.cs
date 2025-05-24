@@ -11,19 +11,12 @@ using ThePantheonSuite.AthenaCore.SasService;
 
 namespace ThePantheonSuite.MercuryAPI;
 
-public class SasTokenGenerationFunctions
+public class SasTokenGenerationFunctions(
+    ILogger<SasTokenGenerationFunctions> logger,
+    ISasGeneratorService sasGeneratorService)
 {
-    private readonly ILogger<SasTokenGenerationFunctions> _logger;
-    private readonly ISasGeneratorService _sasGeneratorService;
+    private readonly ILogger<SasTokenGenerationFunctions> _logger = logger;
 
-    public SasTokenGenerationFunctions(ILogger<SasTokenGenerationFunctions> logger, 
-        ISasGeneratorService sasGeneratorService)
-    {
-        _logger = logger;
-        _sasGeneratorService = sasGeneratorService;
-    }
-
-    // [Authorize]
     [Function("GenerateWriteSasToken")]
     public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous,
         "get", "post")] HttpRequestData req)
@@ -35,7 +28,7 @@ public class SasTokenGenerationFunctions
         var principal = (ClaimsPrincipal)principalObj;
         var body = JsonSerializer.Deserialize<SasGenerationRequestModel>(await req.ReadAsStringAsync() ?? string.Empty);
         if (body is null) return new BadRequestResult();
-        var token = await _sasGeneratorService.GenerateWriteSasTokenAsync(principal, body);
+        var token = await sasGeneratorService.GenerateWriteSasTokenAsync(principal, body);
         return new OkObjectResult(token);
     }
 }
