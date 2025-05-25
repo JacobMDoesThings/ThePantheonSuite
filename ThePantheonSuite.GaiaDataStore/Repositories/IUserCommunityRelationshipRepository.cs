@@ -9,9 +9,10 @@ public interface IUserCommunityRelationShipRepository : IRepository<UserCommunit
     
     Task<List<UserCommunityRelationship>> GetByCommunityIdAsync(string communityId);
     
-    Task AddUserToCommunityAsync(string userId, string communityId);
+    Task AddUserToCommunityAsync(string userId, string communityId, Role role = Role.Member);
     
     Task UpdateRoleAsync(string userId, string communityId, Role newRole);
     
     Task DeleteUserFromCommunityAsync(string userId, string communityId);
+    
 }

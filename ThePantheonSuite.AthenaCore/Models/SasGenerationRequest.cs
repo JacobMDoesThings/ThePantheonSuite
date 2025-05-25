@@ -1,8 +1,8 @@
 using System.Security.Claims;
 
-namespace ThePantheonSuite.AthenaCore.SasService;
+namespace ThePantheonSuite.AthenaCore.Models;
 
-public class SasGenerationRequestModel
+public class SasGenerationRequest
 {
     private ClaimsPrincipal? _principal;
     private readonly string? _selectedGroupId;

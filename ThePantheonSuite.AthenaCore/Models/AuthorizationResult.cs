@@ -1,4 +1,4 @@
-namespace ThePantheonSuite.AthenaCore.AuthzAuthn;
+namespace ThePantheonSuite.AthenaCore.Models;
 
 public class AuthorizationResult
 {

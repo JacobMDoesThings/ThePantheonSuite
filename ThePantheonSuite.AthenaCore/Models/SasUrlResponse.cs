@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace ThePantheonSuite.AthenaCore.SasService;
+namespace ThePantheonSuite.AthenaCore.Models;
 
 public class SasUrlResponse
 {

@@ -13,4 +13,11 @@ public class UserCommunityRelationship : BaseEntity
     
     [JsonPropertyName("role")]
     public Role Role { get; set; }
+    
+    [JsonPropertyName("id")]
+    public sealed override string Id { get; set; }
+    public UserCommunityRelationship()
+    {
+        Id = $"{UserId}_{CommunityId}";
+    }
 }

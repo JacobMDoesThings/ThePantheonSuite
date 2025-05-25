@@ -7,9 +7,9 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Azure.Functions.Worker.Middleware;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ThePantheonSuite.AthenaCore.AuthzAuthn
+namespace ThePantheonSuite.AthenaCore.Middleware
 {
-    public class EntraB2CMiddleware(ClientInfoConfiguration config) : IFunctionsWorkerMiddleware
+    public class EntraB2CMiddleware(Configuration.ClientInfoConfiguration config) : IFunctionsWorkerMiddleware
     {
         public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
         {

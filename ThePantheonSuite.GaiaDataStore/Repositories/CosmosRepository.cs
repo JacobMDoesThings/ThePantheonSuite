@@ -9,10 +9,10 @@ public class CosmosRepository<T> : IRepository<T> where T : BaseEntity
 
     public CosmosRepository(
         CosmosClient cosmosClient,
-        string databaseId,
+        string databaseName,
         string containerName)
     {
-        var database = cosmosClient.GetDatabase(databaseId);
+        var database = cosmosClient.GetDatabase(databaseName);
         _container = database.GetContainer(containerName);
     }
 

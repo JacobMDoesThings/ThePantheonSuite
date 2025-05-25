@@ -2,9 +2,9 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using ThePantheonSuite.AthenaCore.Configuration.BlobService;
+using ThePantheonSuite.AthenaCore.Configuration;
 using ThePantheonSuite.AthenaCore.Interfaces;
-using ThePantheonSuite.AthenaCore.SasService;
+using ThePantheonSuite.AthenaCore.Models;
 
 
 namespace ThePantheonSuite.MinervaServices.BlobService;

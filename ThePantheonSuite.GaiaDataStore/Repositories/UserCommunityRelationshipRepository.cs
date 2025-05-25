@@ -1,20 +1,40 @@
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.Extensions.Options;
+using ThePantheonSuite.AthenaCore.Configuration;
 using ThePantheonSuite.AthenaCore.Models;
-using ThePantheonSuite.AthenaCore.Repository;
 using ThePantheonSuite.GaiaDataStore.Entities;
 
 namespace ThePantheonSuite.GaiaDataStore.Repositories;
 
-public class UserCommunityRepository(
-    CosmosClient cosmosClient,
-    CosmosDbSettings settings)
-    : CosmosRepository<UserCommunityRelationship>(cosmosClient, settings.DatabaseId,
-        settings.UserCommunityContainerName), IUserCommunityRelationShipRepository
+public class UserCommunityRelationshipRepository
+    : CosmosRepository<UserCommunityRelationship>, IUserCommunityRelationShipRepository
 {
-    private readonly Container _container = cosmosClient.GetContainer(settings.DatabaseId, settings.UserCommunityContainerName);
+    private readonly Container? _container;
 
+    public UserCommunityRelationshipRepository(CosmosClient cosmosClient, 
+        CosmosDbConfiguration configuration) : base(cosmosClient, configuration.DatabaseName,
+        configuration.ContainerName)
+    {
+        try
+        {
+            var database = cosmosClient.CreateDatabaseIfNotExistsAsync(configuration.DatabaseName).Result.Database;
+            // Use built-in method instead of manual existence check
+            database.CreateContainerIfNotExistsAsync(
+                configuration.ContainerProperties,
+                throughput: configuration.Throughput);
+
+            _container = cosmosClient.GetContainer(configuration.DatabaseName, configuration.ContainerName);
+        }
+        catch (CosmosException ex) when (
+            ex.StatusCode == System.Net.HttpStatusCode.Conflict ||
+            ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            // Handle cases where container already exists or invalid configuration
+            Console.WriteLine($"Container creation failed: {ex.Message}");
+        }
+    }
+    
     public async Task<List<UserCommunityRelationship>> GetByUserIdAsync(string userId)
     {
         var query = _container.GetItemLinqQueryable<UserCommunityRelationship>()
@@ -22,7 +42,7 @@ public class UserCommunityRepository(
             .ToFeedIterator();
 
         var results = new List<UserCommunityRelationship>();
-        
+
         while (query.HasMoreResults)
         {
             var response = await query.ReadNextAsync();
@@ -39,7 +59,7 @@ public class UserCommunityRepository(
             .ToFeedIterator();
 
         var results = new List<UserCommunityRelationship>();
-        
+
         while (query.HasMoreResults)
         {
             var response = await query.ReadNextAsync();
@@ -49,14 +69,14 @@ public class UserCommunityRepository(
         return results;
     }
 
-    public async Task AddUserToCommunityAsync(string userId, string communityId)
+    public async Task AddUserToCommunityAsync(string userId, string communityId, Role role = Role.Member)
     {
         var relationship = new UserCommunityRelationship
         {
             Id = $"{userId}_{communityId}",
             UserId = userId,
             CommunityId = communityId,
-            Role = Role.Member // Default role
+            Role = role
         };
 
         await CreateAsync(relationship);
@@ -65,7 +85,7 @@ public class UserCommunityRepository(
     public async Task UpdateRoleAsync(string userId, string communityId, Role newRole)
     {
         var relationship = await GetByUserIdAndCommunityIdAsync(userId, communityId);
-        
+
         if (relationship == null)
             throw new KeyNotFoundException("Relationship not found");
 
@@ -76,7 +96,7 @@ public class UserCommunityRepository(
     public async Task DeleteUserFromCommunityAsync(string userId, string communityId)
     {
         var relationship = await GetByUserIdAndCommunityIdAsync(userId, communityId);
-        
+
         if (relationship == null)
             throw new KeyNotFoundException("Relationship not found");
 
@@ -90,7 +110,7 @@ public class UserCommunityRepository(
             .ToFeedIterator();
 
         var results = await query.ReadNextAsync();
-        
+
         return results.FirstOrDefault();
     }
 

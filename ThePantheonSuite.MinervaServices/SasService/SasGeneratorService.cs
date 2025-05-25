@@ -3,8 +3,9 @@ using Azure;
 using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Sas;
+using ThePantheonSuite.AthenaCore.Configuration;
 using ThePantheonSuite.AthenaCore.Interfaces;
-using ThePantheonSuite.AthenaCore.SasService;
+using ThePantheonSuite.AthenaCore.Models;
 
 namespace ThePantheonSuite.MinervaServices.SasService;
 
@@ -12,7 +13,7 @@ public class SasGeneratorService(AzureStorageConfiguration azStConfiguration) : 
 
 {
     public async Task<SasUrlResponse> GenerateWriteSasTokenAsync(
-        ClaimsPrincipal principal, SasGenerationRequestModel sasGenerationRequest)
+        ClaimsPrincipal principal, SasGenerationRequest sasGenerationRequest)
     {
         try
         {
@@ -28,15 +29,15 @@ public class SasGeneratorService(AzureStorageConfiguration azStConfiguration) : 
     }
 
     public async Task<IEnumerable<SasUrlResponse>> BulkGenerateWriteSasTokenAsync(
-        SasGenerationRequestModel sasGenerationRequestModel, int count)
+        SasGenerationRequest sasGenerationRequest, int count)
     {
         List<SasUrlResponse> sasUrls = [];
         try
         {
-            var blobServiceClient = await GetBlobContainerClientAsync(GetBlobServiceClient(), sasGenerationRequestModel);
+            var blobServiceClient = await GetBlobContainerClientAsync(GetBlobServiceClient(), sasGenerationRequest);
             for (var i = 0; i < count; i++)
             {
-                sasUrls.Add(GenerateSasUrl(blobServiceClient, sasGenerationRequestModel, BlobSasPermissions.Write));
+                sasUrls.Add(GenerateSasUrl(blobServiceClient, sasGenerationRequest, BlobSasPermissions.Write));
             }
             return sasUrls;
         }
@@ -47,12 +48,12 @@ public class SasGeneratorService(AzureStorageConfiguration azStConfiguration) : 
     }
     
 
-    public async Task<SasUrlResponse> GenerateReadSasTokenAsync(SasGenerationRequestModel sasGenerationRequestModel, string imageName)
+    public async Task<SasUrlResponse> GenerateReadSasTokenAsync(SasGenerationRequest sasGenerationRequest, string imageName)
     {
         try
         {
-            var containerClient = await GetBlobContainerClientAsync(GetBlobServiceClient(), sasGenerationRequestModel);
-            return GenerateSasUrl(containerClient, sasGenerationRequestModel, BlobSasPermissions.Read, imageName);
+            var containerClient = await GetBlobContainerClientAsync(GetBlobServiceClient(), sasGenerationRequest);
+            return GenerateSasUrl(containerClient, sasGenerationRequest, BlobSasPermissions.Read, imageName);
         }
         catch (Exception ex)
         {
@@ -61,19 +62,19 @@ public class SasGeneratorService(AzureStorageConfiguration azStConfiguration) : 
     }
 
     private SasUrlResponse GenerateSasUrl(BlobContainerClient blobContainerClient, 
-        SasGenerationRequestModel sasGenerationRequestModel, BlobSasPermissions permission, string blobName = "")
+        SasGenerationRequest sasGenerationRequest, BlobSasPermissions permission, string blobName = "")
     {
         blobName = permission switch
         {
-            BlobSasPermissions.Write => GenerateBlobName(sasGenerationRequestModel),
+            BlobSasPermissions.Write => GenerateBlobName(sasGenerationRequest),
             _ => blobName
         };
 
-        //var blobName = GenerateBlobName(sasGenerationRequestModel);
+        //var blobName = GenerateBlobName(sasGenerationRequest);
         var blobClient = blobContainerClient.GetBlobClient(blobName);
         var sasBuilder = new BlobSasBuilder()
         {
-            BlobContainerName = sasGenerationRequestModel.SelectedGroupId,
+            BlobContainerName = sasGenerationRequest.SelectedGroupId,
             BlobName = blobName,
             Resource = "b",
             ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(10),
@@ -103,9 +104,9 @@ public class SasGeneratorService(AzureStorageConfiguration azStConfiguration) : 
     }
 
     private static async Task<BlobContainerClient> GetBlobContainerClientAsync(BlobServiceClient blobServiceClient,
-        SasGenerationRequestModel sasGenerationRequestModel)
+        SasGenerationRequest sasGenerationRequest)
     {
-        var containerClient = blobServiceClient.GetBlobContainerClient(sasGenerationRequestModel.SelectedGroupId);
+        var containerClient = blobServiceClient.GetBlobContainerClient(sasGenerationRequest.SelectedGroupId);
 
         var createResponse = await containerClient.CreateIfNotExistsAsync();
 
@@ -150,11 +151,11 @@ public class SasGeneratorService(AzureStorageConfiguration azStConfiguration) : 
         }
     }
 
-    private static string GenerateBlobName(SasGenerationRequestModel sasGenerationRequestModel)
+    private static string GenerateBlobName(SasGenerationRequest sasGenerationRequest)
     {
-        return  sasGenerationRequestModel.IsPublic
-            ? $"public/images/{sasGenerationRequestModel.UserId}/{Guid.NewGuid()}-{DateTime.Now.Ticks}"
-            : $"{sasGenerationRequestModel.UserId}/images/{Guid.NewGuid()}-{DateTime.Now.Ticks}";
+        return  sasGenerationRequest.IsPublic
+            ? $"public/images/{sasGenerationRequest.UserId}/{Guid.NewGuid()}-{DateTime.Now.Ticks}"
+            : $"{sasGenerationRequest.UserId}/images/{Guid.NewGuid()}-{DateTime.Now.Ticks}";
     }
 
     private class SasGeneratorException : Exception

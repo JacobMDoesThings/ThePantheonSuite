@@ -1,4 +1,4 @@
-namespace ThePantheonSuite.AthenaCore.Configuration.BlobService;
+namespace ThePantheonSuite.AthenaCore.Configuration;
 
 public class BlobServiceConfiguration
 {

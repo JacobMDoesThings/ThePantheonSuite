@@ -1,4 +1,4 @@
-using ThePantheonSuite.AthenaCore.SasService;
+using ThePantheonSuite.AthenaCore.Models;
 
 namespace ThePantheonSuite.AthenaCore.Interfaces;
 
