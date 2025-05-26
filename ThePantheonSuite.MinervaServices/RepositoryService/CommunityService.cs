@@ -8,16 +8,16 @@ public class CommunityService(IUserCommunityRelationShipRepository userCommunity
     public async Task UpdateUserCommunityRoleAsync(
         string userId,
         string communityId,
-        Role newRole)
+        CommunityRole newCommunityRole)
     {
-        await userCommunityRepo.UpdateRoleAsync(userId, communityId, newRole);
+        await userCommunityRepo.UpdateRoleAsync(userId, communityId, newCommunityRole);
     }
     
     public async Task AddUserToCommunityAsync(
         string userId,
-        string communityId, Role role)
+        string communityId, CommunityRole communityRole)
     {
-        await userCommunityRepo.AddUserToCommunityAsync(userId, communityId, role);
+        await userCommunityRepo.AddUserToCommunityAsync(userId, communityId, communityRole);
     }
 
 }

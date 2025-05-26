@@ -10,7 +10,6 @@ using ThePantheonSuite.AthenaCore.Models;
 namespace ThePantheonSuite.MinervaServices.SasService;
 
 public class SasGeneratorService(AzureStorageConfiguration azStConfiguration) : ISasGeneratorService
-
 {
     public async Task<SasUrlResponse> GenerateWriteSasTokenAsync(
         ClaimsPrincipal principal, SasGenerationRequest sasGenerationRequest)

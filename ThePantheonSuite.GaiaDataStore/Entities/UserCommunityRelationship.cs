@@ -11,8 +11,8 @@ public class UserCommunityRelationship : BaseEntity
     [JsonPropertyName("communityId")]
     public required string CommunityId { get; init; }
     
-    [JsonPropertyName("role")]
-    public Role Role { get; set; }
+    [JsonPropertyName("communityRole")]
+    public CommunityRole CommunityRole { get; set; }
     
     [JsonPropertyName("id")]
     public sealed override string Id { get; set; }

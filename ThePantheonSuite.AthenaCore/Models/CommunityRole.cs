@@ -1,6 +1,6 @@
 namespace ThePantheonSuite.AthenaCore.Models;
 
-public enum Role
+public enum CommunityRole
 {
     Member,
     Admin

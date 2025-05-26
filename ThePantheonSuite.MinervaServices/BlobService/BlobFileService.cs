@@ -17,7 +17,7 @@ public class BlobFileService : IFileUploadService
     public BlobFileService(BlobServiceConfiguration configuration, IHttpClientFactory httpClientFactory)
     {
         _sasServiceClient = httpClientFactory.CreateClient("SasService");
-        if (configuration.BaseAddress is not null) _sasServiceClient.BaseAddress = new Uri(configuration.BaseAddress);
+        _sasServiceClient.BaseAddress = new Uri(configuration.BaseAddress);
         _blobServiceConfiguration = configuration;
     }
 

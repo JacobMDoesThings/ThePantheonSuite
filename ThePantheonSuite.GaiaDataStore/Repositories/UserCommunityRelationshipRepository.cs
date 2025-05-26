@@ -37,13 +37,13 @@ public class UserCommunityRelationshipRepository
     
     public async Task<List<UserCommunityRelationship>> GetByUserIdAsync(string userId)
     {
-        var query = _container.GetItemLinqQueryable<UserCommunityRelationship>()
+        var query = _container?.GetItemLinqQueryable<UserCommunityRelationship>()
             .Where(c => c.UserId == userId)
             .ToFeedIterator();
 
         var results = new List<UserCommunityRelationship>();
 
-        while (query.HasMoreResults)
+        while (query!.HasMoreResults)
         {
             var response = await query.ReadNextAsync();
             results.AddRange(response);
@@ -69,27 +69,27 @@ public class UserCommunityRelationshipRepository
         return results;
     }
 
-    public async Task AddUserToCommunityAsync(string userId, string communityId, Role role = Role.Member)
+    public async Task AddUserToCommunityAsync(string userId, string communityId, CommunityRole communityRole = CommunityRole.Member)
     {
         var relationship = new UserCommunityRelationship
         {
             Id = $"{userId}_{communityId}",
             UserId = userId,
             CommunityId = communityId,
-            Role = role
+            CommunityRole = communityRole
         };
 
         await CreateAsync(relationship);
     }
 
-    public async Task UpdateRoleAsync(string userId, string communityId, Role newRole)
+    public async Task UpdateRoleAsync(string userId, string communityId, CommunityRole newCommunityRole)
     {
         var relationship = await GetByUserIdAndCommunityIdAsync(userId, communityId);
 
         if (relationship == null)
             throw new KeyNotFoundException("Relationship not found");
 
-        relationship.Role = newRole;
+        relationship.CommunityRole = newCommunityRole;
         await UpdateAsync(relationship);
     }
 
@@ -105,17 +105,18 @@ public class UserCommunityRelationshipRepository
 
     private async Task<UserCommunityRelationship?> GetByUserIdAndCommunityIdAsync(string userId, string communityId)
     {
-        var query = _container.GetItemLinqQueryable<UserCommunityRelationship>()
+        var query = _container?.GetItemLinqQueryable<UserCommunityRelationship>()
             .Where(c => c.UserId == userId && c.CommunityId == communityId)
             .ToFeedIterator();
-
-        var results = await query.ReadNextAsync();
+        
+        var results = await query?.ReadNextAsync();
 
         return results.FirstOrDefault();
     }
 
     public async Task DeleteAsync(string id, PartitionKey partitionKey)
     {
-        await _container.DeleteItemAsync<UserCommunityRelationship>(id, partitionKey);
+        if (_container is not null)
+            await (_container.DeleteItemAsync<UserCommunityRelationship>(id, partitionKey));
     }
 }
